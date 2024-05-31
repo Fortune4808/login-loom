@@ -1,6 +1,8 @@
-jQuery(document).ready(function() {
-  $.backstretch(["all-images/backgrounds/bg1.jpg"],{duration: 4000, fade: 2000});
+$(document).ready(function() {
+  var images = ["all-images/backgrounds/bg1.jpg", "all-images/backgrounds/bg2.jpg", "all-images/backgrounds/bg3.jpg"];
+  $("#background-images, #background").backstretch(images, { duration: 4000, fade: 2000 });
 });
+
 
 
 function _next_page(next_id) {
@@ -39,6 +41,21 @@ function _get_page(page){
   });
 }
 
+function _get_form(page){
+  $('.overlay-div').html('<div class="ajax-loader"><br><img src="all-images/image-pix/ajax-loader.gif"/></div>').fadeIn(500);
+  var action='get_form';
+  var dataString ='action='+ action+'&page='+ page;
+  $.ajax({
+  type: "POST",
+  url: account_local_url,
+  data: dataString,
+  cache: false,
+  success: function(html){
+      $('.overlay-div').html(html);}
+  });
+}
+
+
 
 function _proceed_reset_password(){
   var email = $('#reset_pass_email').val();
@@ -52,28 +69,30 @@ function _proceed_reset_password(){
     $('#submit_btn').html('<i id="spinner" class="bi bi-arrow-repeat"></i> PROCESSING...');
     document.getElementById('submit_btn').disabled = true;
 
-    var action='proceed-reset-password-api';
-    var dataString ='action=' + action + '&email=' + email;
+    var dataString ='email=' + email;
 
     $.ajax({
       type: "POST",
-      url: endPoint,
+      url: user_reset_password_api,
       dataType: "json",
       data: dataString,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('apiKey', apiKey);
+      },
       cache: false,
       success: function (data) {
-        var result = data.result; 
-        var message1 = data.message1;
-        var message2 = data.message2; 
+        var success = data.success; 
+        var message = data.message; 
 
-        if(result==true){ 
-          var staff_id = data.staff_id;
-          var staff_fullname = data.staff_fullname;
-          var staff_email = data.staff_email;
-          _reset_password(staff_id,staff_fullname,staff_email);
+        if(success==true){ 
+          var user_id = data.user_id;
+          var fullname = data.fullname;
+          var email_address = data.email_address;
+          _reset_password(user_id,fullname,email_address);
 
         }else{
-          $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> '+message1+' <br /><span> '+message2+' </span>').fadeIn(500).delay(5000).fadeOut(100);
+          $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div>' + 'ERROR!<br> ' + '<span>' + message + '</span>').fadeIn(500).delay(5000).fadeOut(100);
+
         }
 
         $('#submit_btn').html(btn_text);
@@ -84,25 +103,45 @@ function _proceed_reset_password(){
   }
 }
 
-function _reset_password(staff_id,staff_fullname,staff_email){
+function _reset_password(user_id,fullname,email_address){
   var action='reset_password';
   $('.overlay-div').html('<div class="ajax-loader"><img src="all-images/image-pix/ajax-loader.gif"/></div>').fadeIn(500);
-  var dataString ='action='+ action+'&staff_id='+ staff_id;
+  var dataString ='action='+ action+'&user_id='+ user_id;
   $.ajax({
   type: "POST",
-  url: login_local_url,
+  url: user_login_local_url,
   data: dataString,
   cache: false,
   success: function(html){
        $('.overlay-div').html(html);
-       $('#staff_fullname').html(staff_fullname);
-       $('#staff_email').html(staff_email);
+       $('#fullname').html(fullname);
+       $('#email_address').html(email_address);
   }
   });
 }
 
+function _resend_otp(ids,user_id){
+  var btn_text=$('#'+ids).html();
+  $('#'+ids).html('SENDING...');
+  var dataString ='user_id='+ user_id;
+  $.ajax({
+  type: "POST",
+  url: user_resend_otp_api,
+  data: dataString,
+  beforeSend: function(xhr) {
+    xhr.setRequestHeader('apiKey', apiKey);
+  },
+  cache: false, 
+  success: function(data){
+      var message = data.message;
+          $('#success-div').html('<div><i class="bi-check"></i></div>' + 'SUCCESS!<br>' + '<span> '+message+' </span>').fadeIn(500).delay(5000).fadeOut(100);
+      $('#'+ids).html(btn_text);
+  }
+});
+}
 
-function _finish_reset_password(staff_id){
+
+function _finish_reset_password(user_id){
   var otp = $('#otp').val();
   var password = $('#create_pass').val();
   var cpassword = $('#confirm_pass').val();
@@ -123,28 +162,29 @@ function _finish_reset_password(staff_id){
         $('#submit_btn').html('<i id="spinner" class="bi bi-arrow-repeat"></i> PROCESSING...');
         document.getElementById('submit_btn').disabled = true;
 
-        var action = 'finish-reset-password-api';
-        var dataString = 'action=' + action + '&staff_id=' + staff_id + '&otp=' + otp + '&password=' + password;
+        var dataString ='user_id=' + user_id + '&otp=' + otp + '&password=' + password;
 
         $.ajax({
           type: "POST",
-          url: endPoint,
+          url: user_finish_reset_password_api,
           data: dataString,
           cache: false,
           dataType: 'json',
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('apiKey', apiKey);
+          },
           cache: false,
           success: function(data) {
-            var result = data.result;
-            var message1 = data.message1;
-            var message2 = data.message2;
+            var success = data.success;
+            var message = data.message2;
 
-            if (result == true) {
-              var staff_id = data.staff_id;
+            if (success == true) {
+              var user_id = data.user_id;
               var otp = data.otp;
               var password = data.password;
 
-              $('#success-div').html('<div><i class="bi-check-all"></i></div>' + message1 + "<br>" + message2 + "").fadeIn(500).delay(5000).fadeOut(100);
-              _password_reset_completed(staff_id,otp,password);
+              $('#success-div').html('<div><i class="bi-check-all"></i></div>' + 'SUCCESS!' + "<br>" + message + "").fadeIn(500).delay(5000).fadeOut(100);
+              _password_reset_completed(user_id,otp,password);
             }else{
 
               $('#not-success-div').html('<div><i class="bi-x-circle"></i></div> INVALID OTP<br /><span>Check the OTP and try again</span>').fadeIn(500).delay(5000).fadeOut(100);
@@ -179,16 +219,14 @@ function _check_password(){
 		}
 	}
  }
-
-
  
-function _password_reset_completed(staff_id){
+function _password_reset_completed(user_id){
   var action='password_reset_completed';
   $('.overlay-div').html('<div class="ajax-loader"><br><img src="all-images/image-pix/ajax-loader.gif"/></div>').fadeIn(500);
-  var dataString ='action='+ action+'&staff_id='+ staff_id;
+  var dataString ='action='+ action+'&user_id='+ user_id;
   $.ajax({
   type: "POST",
-  url: login_local_url,
+  url: user_login_local_url,
   data: dataString,
   cache: false,
   success: function(html)
@@ -199,64 +237,96 @@ function _password_reset_completed(staff_id){
 
 
 
-
-
-
-
-
-function _sign_in(email, password){
+function _user_registration() {
+  var agent_id = $('#agent_id').val();
+  var fullname = $('#fullname').val();
+  var maiden_name = $('#maiden_name').val();
+  var dob = $('#dob').val();
+  var address = $('#address').val();
+  var town = $('#town').val();
+  var income = $('#income').val();
+  var phone_number = $('#phone_number').val();
   var email = $('#email').val();
-  var password = $('#password').val();
+  var occupation = $('#occupation').val();
+  var gender = $('#gender').val();
+  var marital_status = $('#marital_status').val();
+  var credit_card = $('#credit_card').val();
+  var prize_cash = $('#prize_cash').val();
 
-  if (email == '') {
-    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> EMAIL ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
-  
-  }else if (password == ''){
-    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> PASSWORD ERROR!<br /><span>Fill all Fields To Continue</span>' ).fadeIn(500).delay(3000).fadeOut(100);
-  }else{
+  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var phoneRegex = /^\+?1?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+  var containsPunctuationOrNumber = /[^\p{L}\s]/gu.test(fullname + maiden_name);
 
-    var btn_text  = $('#signin_btn').html();
-    $('#signin_btn').html('<i id="spinner" class="bi bi-arrow-repeat"></i> AUTHENTICATING...');
-    document.getElementById('signin_btn').disabled = true;
+  if (agent_id == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> AGENT ID ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (fullname == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> FULLNAME ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (maiden_name == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> MOTHER MAIDEN NAME ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (dob == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> DATE OF BIRTH ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (address == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> ADDRESS ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (town == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> TOWN/CITY ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (income == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> MONTHLY INCOME ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (phone_number == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> PHONE NUMBER ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (email == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> EMAIL ADDRESS ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (occupation == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> OCCUPATION ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (gender == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> GENDER ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (marital_status == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> MARITAL STATUS ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (credit_card == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> CREDIT CARD ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else if (prize_cash == '') {
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> CASH OR CHECK ERROR!<br /><span>Fill all Fields To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  }else if (!emailRegex.test(email)){
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> EMAIL ERROR!<br /><span>Enter a valid Email To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  }else if (!phoneRegex.test(phone_number)){
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> PHONE NUMBER ERROR!<br /><span>Enter a valid Phone number To Continue</span>').fadeIn(500).delay(3000).fadeOut(100);
+  }else if (containsPunctuationOrNumber){
+    $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div> NAME ERROR!<span> Name should not contain any punctuation mark or number.</span>').fadeIn(500).delay(3000).fadeOut(100);
+  } else {
+    var btn_text = $('#submit_btn').html();
+    $('#submit_btn').html('<i id="spinner" class="bi bi-arrow-repeat"></i> SUBMITTING...');
+    document.getElementById('submit_btn').disabled = true;
 
-    var action='login-api';
-
-    var dataString ='action=' + action + '&email=' + email +'&password='+ password;
+    var dataString = 'agent_id=' + agent_id + '&fullname=' + fullname + '&maiden_name=' + maiden_name + '&dob=' + dob + '&address=' + address + '&town=' + town + '&income=' + income + '&phone_number=' + phone_number + '&email_address=' + email + '&occupation=' + occupation + '&gender=' + gender + '&marital_status=' + marital_status + '&credit_card=' + credit_card + '&prize_cash=' + prize_cash;
 
     $.ajax({
       type: "POST",
-      url: endPoint,
-      dataType: "json",
+      url: user_registration_api,
       data: dataString,
       cache: false,
-      success: function (info) {
-        var success = info.success;
-        var message1 = info.message1;
-        var message2 = info.message2;
+      dataType: 'json',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('apiKey', apiKey);
+      },
+      success: function(data) {
+        var success = data.success;
+        var message = data.message;
 
-        if (success == true){
-          $('#success-div').html('<div><i class="bi-check-all"></i></div>' + message1 + "<br>"+ message2 +"").fadeIn(500).delay(5000).fadeOut(100);
+        if (success == true) {
+          // var user_id = data.user_id;
 
-          var s_staff_id = info.s_staff_id; 
-          var access_key= info.access_key;
-          redirectToPortal(s_staff_id, access_key);
-        
-          $('#signin_btn').html(btn_text);
-          document.getElementById('signin_btn').disabled = false;
-        }else{
-          $('#warning-div').html('<div><i class="bi-exclamation-circle"></i></div>'  + message1 + "<br>"+ message2 +"").fadeIn(500).delay(3000).fadeOut(100);
+          $('#submit_btn').html(btn_text);
+          document.getElementById('submit_btn').disabled = false;
 
-          $('#signin_btn').html(btn_text);
-          document.getElementById('signin_btn').disabled = false;
+          $('#success-div').html('<div><i class="bi-check-all"></i></div>' + 'SUCCESS!' + "<br>" + message + "").fadeIn(500).delay(5000).fadeOut(100);
+        } else {
+
+          $('#not-success-div').html('<div><i class="bi-check-all"></i></div>' + 'ERROR!' + "<br>" + message + "").fadeIn(500).delay(5000).fadeOut(100);
+          $('#submit_btn').html(btn_text);
+          document.getElementById('submit_btn').disabled = false;
         }
 
       },
     });
-  
   }
 }
 
-function redirectToPortal() {
-  var portalUrl = website_url + 'portal/';
-  window.location.href = portalUrl;
-}

@@ -1,5 +1,5 @@
 jQuery(document).ready(function() {
-  $.backstretch(["all-images/backgrounds/bg1.png"],{duration: 4000, fade: 2000});
+  $.backstretch(["all-images/backgrounds/bg1.jpg"],{duration: 4000, fade: 2000});
 });
 
 
@@ -61,39 +61,39 @@ function _get_admin_profile(page){
   });
 }
 
-function getStaffProfile(s_staff_id) {
-  var action = 'staff-profile-api';
-  var dataString = 'action=' + action + '&staff_id=' + s_staff_id;
 
+
+function _get_staff_login() {
+  var action = 'fetch-staff-api';
+  var dataString = 'action=' + action + '&staff_id=' + login_staff_id;
   $.ajax({
-    type: 'POST',
+    type: "POST",
     url: endPoint,
     data: dataString,
     dataType: 'json',
     cache: false,
-    success: function (info) {
-      var surname = info.staff_surname;
-      var othername = info.staff_othername;
-      var loginDate = info.last_login_date;
+
+    success: function(info) {
       var success = info.success;
 
-      var profileText = '';
-      if (success==true) {
-        profileText +=
-         
-
-          $('#fetch_staff_profile').html(profileText);
-      } else {
-        // Handle failure case if needed
-      }
-    },
+      if(success==true){
+        var fetch = info.data[0];
+        alert(info);
+        var staff_surname = fetch.staff_surname;
+        var last_login_date = fetch.last_login_date;
+        alert(last_login_date);
+      $("#login_user_time").html(last_login_date);
+     }else{
+      ///
+    }
+    }
   });
 }
 
 
 
 function _all_active_staff(){
-  var action = 'active-staff-api';
+  var action = 'fetch-staff-api';
   var dataString = 'action=' + action;
 
   $.ajax({
@@ -106,7 +106,6 @@ function _all_active_staff(){
      var fetch = info.data;
       var success = info.success;
       var message1 = info.message1;
-      var message2 = info.message2;
 
       var text = '';
       if(success==true){

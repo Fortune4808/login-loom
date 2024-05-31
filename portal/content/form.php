@@ -1,13 +1,9 @@
 <?php if ($page=='staff_reg'){?>
-    <div class="reg-form animated fadeInRight">
-        <div class="title-div">
-            <div class="div-in">
-                <div class="text-div"><p><i class="bi-person-plus"></i> New Staff Registration Form</p></div>
-                <div class="close" title="close" onclick="alert_close()">X</div>
-            </div>
-       </div>
-       <div class="form-div">
-            <div class="text-div">Kindly fill the form below to <span>Add New Staff</span></div>
+    <div class="caption-div reg-form animated fadeInRight">
+        <div class="title-div"><i class="bi-person-plus"></i> New Staff/Agent Registration Form <div class="close" title="close"  onclick="alert_close()"><i class="bi-x"></i></div></div>            
+        <div class="profile-content-div">
+            <div class="form-div">
+                <div class="text-div">Kindly fill the form below to <span>Add New Staff/Agent</span></div>
             
                 <input type="hidden" name="action" value=""/>
                 <div class="data">
@@ -38,38 +34,51 @@
                     </select>
                 </div>
                 <button class="btn" type="button" title="submit" id="submit_btn" onclick="_sign_in();"><i class="bi-check-lg"></i> Submit</button>
-           
-       </div>
-    </div>  
+            </div>
+        </div>
+    </div>
 <?php }?>
 
 
-<?php if ($page=='system-settings'){?>
-    <div class="reg-form animated fadeInRight">
-        <div class="title-div">
-            <div class="div-in">
-                <div class="text-div"><p><i class="bi-gear"></i> System Settings</p></div>
-                <div class="close" title="close" onclick="alert_close()">X</div>
+<?php if ($page=='beneficiary-reg'){?>
+    <div class="caption-div reg-form animated fadeInRight">
+        <div class="title-div"><i class="bi-person-plus"></i> New Beneficiary Registration Form <div class="close" title="close"  onclick="alert_close()"><i class="bi-x"></i></div></div>            
+        <div class="profile-content-div">
+            <div class="form-div">
+                <div class="text-div">Kindly fill the form below to <span>Add New Beneficiary</span></div>
+            
+                <input type="hidden" name="action" value=""/>
+                <div class="data">
+                    <label>FULLNAME:</label>
+                    <input type="text" id="fullname" placeholder="FULL NAME" title="FULL NAME"/>
+                </div>
+
+                <div class="data">
+                    <label>REWARD:</label>
+                    <input type="number" id="reward" placeholder="0.00" title="REWARD"/>
+                </div>
+
+                <div class="data">
+                    <label>STATUS:</label>
+                    <select>
+                        <!-- <option value="active">ACTIVE</option>
+                        <option value="suspend">SUSPEND</option> -->
+                    </select>
+                </div>
+                <button class="btn" type="button" title="submit" id="submit_btn" onclick="_sign_in();"><i class="bi-check-lg"></i> Submit</button>
             </div>
-       </div>
-       <div class="form-div">
-          
-       </div>
-    </div>  
+        </div>
+    </div>
 <?php }?>
 
 
 <?php if ($page=='pass-form'){?>
-    <div class="reg-form animated fadeInRight">
-        <div class="title-div">
-            <div class="div-in">
-                <div class="text-div"><p><i class="bi-lock"></i> Change Password Form</p></div>
-                <div class="close" title="close" onclick="alert_close()">X</div>
-            </div>
-       </div>
-       <div class="form-div">
-            <div class="text-div">Enter the <span>OLD PASSWORD</span> and create your <span>NEW PASSWORD</span></div>
-            
+    <div class="caption-div reg-form animated fadeInRight">
+        <div class="title-div"><i class="bi-lock"></i> Change Password Form <div class="close" title="close"  onclick="alert_close()"><i class="bi-x"></i></div></div>            
+        <div class="profile-content-div">
+            <div class="form-div">
+                <div class="text-div">Enter the <span>OLD PASSWORD</span> and create your <span>NEW PASSWORD</span></div>
+
                 <input type="hidden" name="action" value=""/>
                 <div class="data">
                     <label>OLD PASSWORD:</label>
@@ -80,13 +89,15 @@
                     <label>NEW PASSWORD:</label>
                     <input type="password" id="new_pass" placeholder="CREATE NEW PASSWORD" title="NEW PASSWORD"/>
                 </div>
+
                 <div class="data">
                     <label>CONFIRM PASSWORD:</label>
                     <input type="password" id="confirm_pass" placeholder="CONFIRM NEW PASSWORD" title="CONFIRMED PASSWORD"/>
                 </div>
                 <button class="btn" type="button" title="submit" id="submit_btn" onclick="_submit_();"><i class="bi-arrow-repeat"></i> Submit</button>
+            </div>
         </div>
-    </div>  
+    </div>
 <?php }?>
 
 
@@ -94,9 +105,7 @@
     <div class="caption-div full-width-caption animated fadeInUp">
         <div class="title-div"><i class="bi-person"></i> ADMINISTRATOR'S PROFILE <div class="close" title="close"  onclick="alert_close()"><i class="bi-x"></i></div></div>            
         <div class="profile-content-div">
-            <div class="profile-cover-div">
-                 
-            </div>
+            <div class="profile-cover-div"></div>
             
             <div class="profile-summary">
                 <label>

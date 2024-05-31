@@ -1,61 +1,52 @@
-<?php include 'config/config.php';?>
+<?php include '../config/config.php';?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include 'meta-link.php';?>
-    <title><?php echo $thename;?> | Administrative Login</title>
+    <title><?php echo $thename?> Application | Submit Your Application </title>
+    <meta name="keywords" content="<?php echo $thename?>, Federal grants application, Apply for grants, Grant support programs application, Financial assistance, Funding opportunities, Grant application process, Eligibility criteria, Grant funding sources, Federal funding programs, Government financial aid, Grant application deadlines, Grant funding for individuals, Federal grant initiatives, USA Free Money" />
+    <meta name="description" content="The federal government USA's free money grant, USA grant programs, tourism grant funding, hospitality grant opportunities, celebrating diversity, sustainable practices grant, immersive experiences funding, and global grant impact."/>
+
+    <meta property="og:title" content="<?php echo $thename?> | Federal grants, Government grants, Grant support programs, Financial assistance, Funding opportunities, Grant application process, Eligibility criteria, Grant funding sources, Federal funding programs, Government financial aid, Grant application deadlines, Grant funding for individuals, Federal grant initiatives, USA Free Money" />
+    <meta property="og:image" content="<?php echo $website_url?>/all-images/body-pix/about-image2.jpg"/>
+    <meta property="og:description" content="The federal government USA's free money grant, USA grant programs, tourism grant funding, hospitality grant opportunities, celebrating diversity, sustainable practices grant, immersive experiences funding, and global grant impact."/>
+
+    <meta name="twitter:title" content="<?php echo $thename?> | Federal grants, Government grants, Grant support programs, Financial assistance, Funding opportunities, Grant application process, Eligibility criteria, Grant funding sources, Federal funding programs, Government financial aid, Grant application deadlines, Grant funding for individuals, Federal grant initiatives, USA Free Money"/> 
+    <meta name="twitter:card" content="<?php echo $thename?>"/> 
+    <meta name="twitter:image"  content="<?php echo $website_url?>/all-images/body-pix/about-image2.jpg"/> 
+    <meta name="twitter:description" content="The federal government USA's free money grant, USA grant programs, tourism grant funding, hospitality grant opportunities, celebrating diversity, sustainable practices grant, immersive experiences funding, and global grant impact."/>
 </head>
 
 <body>
+<?php include 'alert.php';?>
     
-<div class="overlay-div"></div>  
+<div class="overlay-div"></div>
 
-<div class="loader-wrapper" id="loader-wrapper">
-    <div id="loader"></div>
-    <div class="loader-section section-left"></div>
-    <div class="loader-section section-right"></div>
-</div>
-
-    <?php include 'header.php';?>
-
-    <div class="container-div">
-      
-        <div class="left-div animated fadeInRight">
-            <div class="text-div">
-                <div class="text-div-in">
-                    <a href="<?php echo $website_url?>" title=""><i class="bi-house-door-fill"></i> HOME PAGE</a> &nbsp;| &nbsp;
-                    <a href="" onClick="window.location.reload();" title="Adminstrative Login"><i class="bi-lock"></i> LOG-IN</a>
-                </div>
-                <h1>AfooTech Login System Administrative Portal<br /><hr /></h1>
-                <div class="logo-div"><img src="all-images/image-pix/logo.png" alt="logo" title="AfooTech Login System logo" /></div>
-            </div>
+<div id="background"></div>
+<div class="container-div">
+    <div class="left-div animated fadeInLeft">
+            
+        <div class="logo-div" title="Home Page">
+            <a href="<?php echo $website_url?>"><img src="all-images/image-pix/logo.png" alt="Logo"></a>
         </div>
 
-        <div class="right-div animated fadeInLeft">
-            <div class="info" id="more-info">
-                <?php $page='log-in';?>
-                <?php include 'config/content-page.php';?> 
-            </div>
-            <?php include 'footer.php';?>
+        <div class="info" id="more-info">
+            <?php $page='log-in';?>
+            <?php include 'config/content-page.php';?> 
         </div>
     </div>
+
+    <div class="right-div animated fadeIn">
+        <div class="circular-container">
+            <div id="background-images" class="circular-background"></div>
+        </div>
+    </div>
+</div>
 
     <script>
 		superplaceholder({
 			el: email,
-				sentences: [ 'Enter Email Address', 'e.g sunaf4real@gmail.com', 'info@pec.com.ng', 'king123@hotmail.com', 'afootech2016@yahoo.com' ],
-				options: {
-				letterDelay: 80,
-				loop: true,
-				startOnFocus: false
-			}
-		});
-</script>
-
-<script>
-		superplaceholder({
-			el: reset_pass_email,
-				sentences: [ 'Enter Email Address', 'e.g sunaf4real@gmail.com', 'info@pec.com.ng', 'king123@hotmail.com', 'afootech2016@yahoo.com' ],
+				sentences: [ 'Enter Email Address', 'e.g federalgrants@gmail.com', 'info@federalgrants.com', 'king123@hotmail.com', 'federalgrants@yahoo.com' ],
 				options: {
 				letterDelay: 80,
 				loop: true,

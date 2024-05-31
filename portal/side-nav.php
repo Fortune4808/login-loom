@@ -10,10 +10,17 @@
                     <div class="li-in" onclick="_get_page('suspended-staff');"> - Suspended Staff</div>
                 </div>
             </li>
+
+            <li onclick="_expand_link('agents');" title="Agents"><i class="bi-person"></i> Agents Page<i class="fa fa-chevron-down"></i>
+                <div class="dashboard-in" id="agents-li" style="display:none">   
+                    <div class="li-in" onclick="_get_page('active-clients');"> - Active Clients</div>
+                    <div class="li-in" onclick="_get_page('beneficiary-list');"> - Beneficiary List</div>
+                </div>
+            </li>
             
             <li onclick="_expand_link('settings');"  title="Settings">  <i class="bi-gear"></i> Settings  <i class="fa fa-chevron-down"></i>
                 <div class="dashboard-in" id="settings-li" style="display:none">   
-                    <div class="li-in" onClick="_get_form('system-settings');"> - System Settings</div>
+                    <div class="li-in" onClick=""> - System Settings</div>
                     <div class="li-in" onClick="_get_form('pass-form');"> - Change Password</div>
                 </div>
             </li>

@@ -1,1 +1,0 @@
-var endPoint='http://localhost/login-loom-api/';
